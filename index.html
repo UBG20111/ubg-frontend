@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>UBG Bid Platform</title>
+
+  <style>
+    :root {
+      --bg: #f4efe8;
+      --bg-soft: #fbf8f4;
+      --panel: #ffffff;
+      --panel-alt: #f8f4ed;
+      --ink: #171a1f;
+      --muted: #6c7480;
+      --line: #e6ddd1;
+      --line-strong: #d0c5b6;
+      --accent: #111111;
+      --blue: #2c5e86;
+      --blue-soft: #eaf1f7;
+      --positive: #2e7d32;
+      --positive-bg: #eaf5eb;
+      --warning: #8b5e3c;
+      --warning-bg: #fbefe7;
+      --danger: #9b3232;
+      --danger-bg: #fbe9e9;
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --shadow: 0 14px 30px rgba(23, 26, 31, 0.08);
+      --shadow-soft: 0 6px 18px rgba(23, 26, 31, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(44, 94, 134, 0.08), transparent 24%),
+        linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
+      color: var(--ink);
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .frame {
+      max-width: 1600px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(17, 17, 17, 0.06);
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .topbar {
+      padding: 22px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #faf7f2 100%);
+      display: grid;
+      gap: 18px;
+    }
+
+    .topbar-main {
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(420px, 1.1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .brand-title {
+      font-size: 2rem;
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      margin: 0;
+    }
+
+    .brand-subtitle {
+      color: var(--muted);
+      margin: 8px 0 0;
+      line-height: 1.45;
+      max-width: 720px;
+    }
+
+    .header-panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .header-panel-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 900;
+      color: var(--muted);
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .btn,
+    button,
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 10px 13px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 180ms ease;
+      box-shadow: 0 1px 1px rgba(17, 17, 17, 0.02);
+      font-weight: 800;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    .btn.black {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    .btn.danger {
+      background: #fff0f0;
+      border-color: #efc0c0;
+      color: #7a1f1f;
+    }
+
+    .btn.success {
+      background: var(--positive-bg);
+      border-color: #b8dbc7;
+      color: var(--positive);
+    }
+
+    .btn.warn {
+      background: var(--warning-bg);
+      border-color: #ecd5be;
+      color: var(--warning);
+    }
+
+    .navs {
+      padding: 16px 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: linear-gradient(180deg, #faf7f2 0%, #f4efe8 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 11px 16px;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .content-area {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(140px, 1fr));
+      gap: 14px;
+    }
+
+    .kpi-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      gap: 6px;
+      min-height: 110px;
+    }
+
+    .kpi-label {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      font-weight: 900;
+      color: var(--muted);
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .kpi-note {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .panel-header h2 {
+      margin: 0;
+      font-size: 1.06rem;
+    }
+
+    .panel-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .panel-body {
+      padding: 18px 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    .form-grid .wide {
+      grid-column: span 2;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 12px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+      font-size: 0.95rem;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(44, 94, 134, 0.12);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(220px, 1fr));
+      gap: 14px;
+      align-items: start;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .column {
+      background: var(--panel-alt);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      min-height: 420px;
+      overflow: hidden;
+    }
+
+    .column-header {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.74);
+    }
+
+    .column-title {
+      font-weight: 900;
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #111;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    .column-body {
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .bid-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 3px 10px rgba(17, 17, 17, 0.04);
+      display: grid;
+      gap: 10px;
+    }
+
+    .bid-card h3 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .bid-meta {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+
+    .bid-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    .mini-btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      padding: 8px 9px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .mini-btn.accept {
+      color: var(--positive);
+      background: var(--positive-bg);
+      border-color: #c5e4ca;
+    }
+
+    .mini-btn.decline {
+      color: var(--danger);
+      background: var(--danger-bg);
+      border-color: #f0caca;
+    }
+
+    .mini-btn.submit {
+      color: var(--blue);
+      background: var(--blue-soft);
+      border-color: #c7dbea;
+    }
+
+    .mini-btn.win {
+      color: var(--positive);
+      background: var(--positive-bg);
+      border-color: #c5e4ca;
+    }
+
+    .mini-btn.delete {
+      color: var(--danger);
+      background: #fff;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 0.9rem;
+    }
+
+    th {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      background: #f1f1f1;
+    }
+
+    .status-Opportunities { background: var(--blue-soft); color: var(--blue); }
+    .status-Bidding { background: var(--warning-bg); color: var(--warning); }
+    .status-Submitted { background: #f0eefc; color: #5c4a9a; }
+    .status-Won { background: var(--positive-bg); color: var(--positive); }
+    .status-Lost { background: var(--danger-bg); color: var(--danger); }
+
+    .auth-wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .auth-card {
+      width: min(520px, 100%);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .auth-header {
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #faf7f2 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .auth-header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: -0.04em;
+    }
+
+    .auth-header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .auth-body {
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .auth-message {
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .auth-message.error {
+      background: var(--danger-bg);
+      color: var(--danger);
+      display: block;
+    }
+
+    .auth-message.success {
+      background: var(--positive-bg);
+      color: var(--positive);
+      display: block;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .empty-state {
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 12px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 14px;
+      text-align: center;
+      background: rgba(255,255,255,0.6);
+    }
+
+    .small-muted {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 1100px) {
+      .topbar-main {
+        grid-template-columns: 1fr;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+      }
+
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+      }
+
+      .board {
+        grid-template-columns: repeat(5, 280px);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app-shell {
+        padding: 10px;
+      }
+
+      .frame {
+        border-radius: 18px;
+      }
+
+      .topbar,
+      .content-area {
+        padding: 16px;
+      }
+
+      .brand-title {
+        font-size: 1.55rem;
+      }
+
+      .kpi-grid,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid .wide {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="authScreen" class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>UBG Bid Platform</h1>
+        <p id="authIntro">Secure access for United Building Group bid opportunities.</p>
+      </div>
+
+      <div class="auth-body">
+        <div id="authMessage" class="auth-message"></div>
+
+        <div id="setupPanel" class="hidden">
+          <label>
+            Admin Email
+            <input id="setupEmail" type="email" placeholder="admin@unitedbuildinggroup.com" />
+          </label>
+
+          <label>
+            Admin Password
+            <input id="setupPassword" type="password" placeholder="Minimum 8 characters" />
+          </label>
+
+          <button class="btn black" onclick="setupAdmin()">Create Admin Login</button>
+
+          <div class="small-muted">
+            This appears only when no users exist. The first user becomes the admin.
+          </div>
+        </div>
+
+        <div id="loginPanel" class="hidden">
+          <label>
+            Email
+            <input id="loginEmail" type="email" placeholder="your email" />
+          </label>
+
+          <label>
+            Password
+            <input id="loginPassword" type="password" placeholder="your password" />
+          </label>
+
+          <button class="btn black" onclick="login()">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="appScreen" class="app-shell hidden">
+    <div class="frame">
+      <header class="topbar">
+        <div class="topbar-main">
+          <div>
+            <h1 class="brand-title">UBG Bid Command Center</h1>
+            <p class="brand-subtitle">
+              Bid opportunity intake, review, pursuit tracking, submission status, and outcome management for United Building Group.
+            </p>
+          </div>
+
+          <div class="header-panel">
+            <div class="header-panel-title">Current Session</div>
+            <div id="currentUser" class="small-muted">Loading user...</div>
+            <div class="header-actions">
+              <button class="btn" onclick="loadBids()">Refresh</button>
+              <button class="btn danger" onclick="logout()">Logout</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <nav class="navs">
+        <button id="tabBoard" class="tab-btn active" onclick="showTab('board')">Bid Board</button>
+        <button id="tabList" class="tab-btn" onclick="showTab('list')">Bid List</button>
+        <button id="tabAdd" class="tab-btn" onclick="showTab('add')">Add Opportunity</button>
+        <button id="tabUsers" class="tab-btn hidden" onclick="showTab('users')">Users</button>
+      </nav>
+
+      <main class="content-area">
+        <section class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Opportunities</div>
+            <div id="kpiOpportunities" class="kpi-value">0</div>
+            <div class="kpi-note">New invites / intake</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Bidding</div>
+            <div id="kpiBidding" class="kpi-value">0</div>
+            <div class="kpi-note">Accepted pursuits</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Submitted</div>
+            <div id="kpiSubmitted" class="kpi-value">0</div>
+            <div class="kpi-note">Proposals submitted</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Won</div>
+            <div id="kpiWon" class="kpi-value">0</div>
+            <div class="kpi-note">Awarded work</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Lost</div>
+            <div id="kpiLost" class="kpi-value">0</div>
+            <div class="kpi-note">No bid / lost</div>
+          </div>
+        </section>
+
+        <section id="boardView" class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Bid Board</h2>
+              <p>Move opportunities from intake to bidding, submitted, won, or lost.</p>
+            </div>
+            <button class="btn primary" onclick="showTab('add')">Add Opportunity</button>
+          </div>
+
+          <div class="panel-body">
+            <div class="board">
+              <div class="column">
+                <div class="column-header">
+                  <div class="column-title">Opportunities</div>
+                  <div id="countOpportunities" class="badge">0</div>
+                </div>
+                <div id="colOpportunities" class="column-body"></div>
+              </div>
+
+              <div class="column">
+                <div class="column-header">
+                  <div class="column-title">Bidding</div>
+                  <div id="countBidding" class="badge">0</div>
+                </div>
+                <div id="colBidding" class="column-body"></div>
+              </div>
+
+              <div class="column">
+                <div class="column-header">
+                  <div class="column-title">Submitted</div>
+                  <div id="countSubmitted" class="badge">0</div>
+                </div>
+                <div id="colSubmitted" class="column-body"></div>
+              </div>
+
+              <div class="column">
+                <div class="column-header">
+                  <div class="column-title">Won</div>
+                  <div id="countWon" class="badge">0</div>
+                </div>
+                <div id="colWon" class="column-body"></div>
+              </div>
+
+              <div class="column">
+                <div class="column-header">
+                  <div class="column-title">Lost</div>
+                  <div id="countLost" class="badge">0</div>
+                </div>
+                <div id="colLost" class="column-body"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="listView" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>Bid List</h2>
+              <p>Table view of all current bid opportunities.</p>
+            </div>
+            <button class="btn" onclick="loadBids()">Refresh List</button>
+          </div>
+
+          <div class="panel-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Project</th>
+                    <th>Company / GC</th>
+                    <th>Status</th>
+                    <th>Due Date</th>
+                    <th>Source</th>
+                    <th>Estimator</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="bidTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="addView" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>Add Bid Opportunity</h2>
+              <p>Create a manual bid opportunity. Email/platform intake will connect to this same pipeline later.</p>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="form-grid">
+              <label>
+                Project Name
+                <input id="projectName" placeholder="Project name" />
+              </label>
+
+              <label>
+                Company / GC
+                <input id="company" placeholder="Company or GC" />
+              </label>
+
+              <label>
+                Due Date
+                <input id="dueDate" type="date" />
+              </label>
+
+              <label>
+                Source
+                <select id="source">
+                  <option value="">Select source</option>
+                  <option value="Manual Entry">Manual Entry</option>
+                  <option value="bids@unitedbuildinggroup.com">bids@unitedbuildinggroup.com</option>
+                  <option value="BuildingConnected">BuildingConnected</option>
+                  <option value="Procore">Procore</option>
+                  <option value="PlanHub">PlanHub</option>
+                  <option value="Other">Other</option>
+                </select>
+              </label>
+
+              <label>
+                Estimator
+                <input id="estimator" placeholder="Estimator" />
+              </label>
+
+              <label>
+                Initial Status
+                <select id="status">
+                  <option value="Opportunities">Opportunities</option>
+                  <option value="Bidding">Bidding</option>
+                  <option value="Submitted">Submitted</option>
+                  <option value="Won">Won</option>
+                  <option value="Lost">Lost</option>
+                </select>
+              </label>
+
+              <label class="wide">
+                Notes
+                <textarea id="notes" placeholder="Scope, location, invite notes, addenda notes, etc."></textarea>
+              </label>
+
+              <div>
+                <button class="btn black" onclick="addBid()">Add Opportunity</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="usersView" class="panel hidden">
+          <div class="panel-header">
+            <div>
+              <h2>User Management</h2>
+              <p>Add approved users who can access this hidden-page application.</p>
+            </div>
+            <button class="btn" onclick="loadUsers()">Refresh Users</button>
+          </div>
+
+          <div class="panel-body">
+            <div class="form-grid">
+              <label>
+                New User Email
+                <input id="newUserEmail" type="email" placeholder="user@unitedbuildinggroup.com" />
+              </label>
+
+              <label>
+                Temporary Password
+                <input id="newUserPassword" type="password" placeholder="Minimum 8 characters" />
+              </label>
+
+              <label>
+                Role
+                <select id="newUserRole">
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </label>
+
+              <div>
+                <button class="btn black" onclick="createUser()">Add User</button>
+              </div>
+            </div>
+
+            <div style="height:18px"></div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Active</th>
+                    <th>Created</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = "https://ubg-backend.onrender.com";
+
+    let currentUser = null;
+    let bids = [];
+
+    function getToken() {
+      return localStorage.getItem("ubg_token");
+    }
+
+    function setToken(token) {
+      localStorage.setItem("ubg_token", token);
+    }
+
+    function clearToken() {
+      localStorage.removeItem("ubg_token");
+    }
+
+    function showAuthMessage(message, type) {
+      const box = document.getElementById("authMessage");
+      box.textContent = message || "";
+      box.className = "auth-message " + (type || "");
+      if (!message) {
+        box.style.display = "none";
+      } else {
+        box.style.display = "block";
+      }
+    }
+
+    function showApp() {
+      document.getElementById("authScreen").classList.add("hidden");
+      document.getElementById("appScreen").classList.remove("hidden");
+    }
+
+    function showAuth() {
+      document.getElementById("appScreen").classList.add("hidden");
+      document.getElementById("authScreen").classList.remove("hidden");
+    }
+
+    async function api(path, options = {}) {
+      const headers = options.headers || {};
+      headers["Content-Type"] = "application/json";
+
+      const token = getToken();
+      if (token) {
+        headers["Authorization"] = "Bearer " + token;
+      }
+
+      const response = await fetch(API_BASE_URL + path, {
+        ...options,
+        headers
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error || "Request failed.");
+      }
+
+      return data;
+    }
+
+    async function boot() {
+      try {
+        const health = await api("/health", { method: "GET" });
+
+        if (!health.login_ready) {
+          document.getElementById("authIntro").textContent = "Create the first administrator login for UBG Bid Platform.";
+          document.getElementById("setupPanel").classList.remove("hidden");
+          document.getElementById("loginPanel").classList.add("hidden");
+          showAuth();
+          return;
+        }
+
+        const token = getToken();
+
+        if (!token) {
+          document.getElementById("authIntro").textContent = "Login to access UBG Bid Platform.";
+          document.getElementById("setupPanel").classList.add("hidden");
+          document.getElementById("loginPanel").classList.remove("hidden");
+          showAuth();
+          return;
+        }
+
+        const me = await api("/auth/me", { method: "GET" });
+        currentUser = me.user;
+        afterLogin();
+      } catch (error) {
+        showAuth();
+        document.getElementById("setupPanel").classList.add("hidden");
+        document.getElementById("loginPanel").classList.remove("hidden");
+        showAuthMessage("Could not connect to backend. Confirm Render is live and API URL is correct.", "error");
+      }
+    }
+
+    async function setupAdmin() {
+      try {
+        showAuthMessage("", "");
+
+        const email = document.getElementById("setupEmail").value.trim();
+        const password = document.getElementById("setupPassword").value.trim();
+
+        const result = await api("/auth/setup", {
+          method: "POST",
+          body: JSON.stringify({ email, password })
+        });
+
+        setToken(result.token);
+        currentUser = result.user;
+        afterLogin();
+      } catch (error) {
+        showAuthMessage(error.message, "error");
+      }
+    }
+
+    async function login() {
+      try {
+        showAuthMessage("", "");
+
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value.trim();
+
+        const result = await api("/auth/login", {
+          method: "POST",
+          body: JSON.stringify({ email, password })
+        });
+
+        setToken(result.token);
+        currentUser = result.user;
+        afterLogin();
+      } catch (error) {
+        showAuthMessage(error.message, "error");
+      }
+    }
+
+    function logout() {
+      clearToken();
+      currentUser = null;
+      location.reload();
+    }
+
+    async function afterLogin() {
+      document.getElementById("currentUser").textContent = currentUser.email + " — " + currentUser.role;
+
+      if (currentUser.role === "admin") {
+        document.getElementById("tabUsers").classList.remove("hidden");
+      } else {
+        document.getElementById("tabUsers").classList.add("hidden");
+      }
+
+      showApp();
+      await loadBids();
+
+      if (currentUser.role === "admin") {
+        await loadUsers();
+      }
+    }
+
+    function showTab(tab) {
+      const tabs = ["board", "list", "add", "users"];
+      tabs.forEach(name => {
+        const tabButton = document.getElementById("tab" + capitalize(name));
+        const view = document.getElementById(name + "View");
+
+        if (tabButton) tabButton.classList.toggle("active", name === tab);
+        if (view) view.classList.toggle("hidden", name !== tab);
+      });
+    }
+
+    function capitalize(value) {
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    }
+
+    async function loadBids() {
+      try {
+        bids = await api("/bids", { method: "GET" });
+        renderBids();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    function renderBids() {
+      const statuses = ["Opportunities", "Bidding", "Submitted", "Won", "Lost"];
+
+      statuses.forEach(status => {
+        const col = document.getElementById("col" + status);
+        if (col) col.innerHTML = "";
+      });
+
+      const counts = {
+        Opportunities: 0,
+        Bidding: 0,
+        Submitted: 0,
+        Won: 0,
+        Lost: 0
+      };
+
+      bids.forEach(bid => {
+        const status = bid.status || "Opportunities";
+        if (counts[status] !== undefined) counts[status] += 1;
+
+        const col = document.getElementById("col" + status);
+        if (col) col.appendChild(createBidCard(bid));
+      });
+
+      statuses.forEach(status => {
+        document.getElementById("count" + status).textContent = counts[status];
+        document.getElementById("kpi" + status).textContent = counts[status];
+
+        const col = document.getElementById("col" + status);
+        if (col && !col.children.length) {
+          const empty = document.createElement("div");
+          empty.className = "empty-state";
+          empty.textContent = "No bids";
+          col.appendChild(empty);
+        }
+      });
+
+      renderBidTable();
+    }
+
+    function createBidCard(bid) {
+      const card = document.createElement("div");
+      card.className = "bid-card";
+
+      const due = bid.due_date ? formatDate(bid.due_date) : "No due date";
+      const source = bid.source || "No source";
+      const estimator = bid.estimator || "No estimator";
+
+      card.innerHTML = `
+        <h3>${escapeHtml(bid.project_name)}</h3>
+        <div class="bid-meta">
+          <div><strong>Company:</strong> ${escapeHtml(bid.company)}</div>
+          <div><strong>Due:</strong> ${escapeHtml(due)}</div>
+          <div><strong>Source:</strong> ${escapeHtml(source)}</div>
+          <div><strong>Estimator:</strong> ${escapeHtml(estimator)}</div>
+          ${bid.notes ? `<div><strong>Notes:</strong> ${escapeHtml(bid.notes)}</div>` : ""}
+        </div>
+        <div class="bid-actions">${actionButtons(bid)}</div>
+      `;
+
+      return card;
+    }
+
+    function actionButtons(bid) {
+      const id = bid.id;
+      const status = bid.status || "Opportunities";
+
+      if (status === "Opportunities") {
+        return `
+          <button class="mini-btn accept" onclick="updateStatus(${id}, 'Bidding')">Accept</button>
+          <button class="mini-btn decline" onclick="updateStatus(${id}, 'Lost')">Decline</button>
+          <button class="mini-btn delete" onclick="deleteBid(${id})">Delete</button>
+        `;
+      }
+
+      if (status === "Bidding") {
+        return `
+          <button class="mini-btn submit" onclick="updateStatus(${id}, 'Submitted')">Mark Submitted</button>
+          <button class="mini-btn decline" onclick="updateStatus(${id}, 'Lost')">Mark Lost</button>
+          <button class="mini-btn delete" onclick="deleteBid(${id})">Delete</button>
+        `;
+      }
+
+      if (status === "Submitted") {
+        return `
+          <button class="mini-btn win" onclick="updateStatus(${id}, 'Won')">Mark Won</button>
+          <button class="mini-btn decline" onclick="updateStatus(${id}, 'Lost')">Mark Lost</button>
+          <button class="mini-btn delete" onclick="deleteBid(${id})">Delete</button>
+        `;
+      }
+
+      return `
+        <button class="mini-btn submit" onclick="updateStatus(${id}, 'Opportunities')">Reopen</button>
+        <button class="mini-btn delete" onclick="deleteBid(${id})">Delete</button>
+      `;
+    }
+
+    function renderBidTable() {
+      const body = document.getElementById("bidTableBody");
+      body.innerHTML = "";
+
+      if (!bids.length) {
+        body.innerHTML = `
+          <tr>
+            <td colspan="8" class="small-muted">No bid opportunities yet.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      bids.forEach(bid => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><strong>${escapeHtml(bid.project_name)}</strong></td>
+          <td>${escapeHtml(bid.company)}</td>
+          <td><span class="status-pill status-${escapeHtml(bid.status || 'Opportunities')}">${escapeHtml(bid.status || "Opportunities")}</span></td>
+          <td>${escapeHtml(bid.due_date ? formatDate(bid.due_date) : "")}</td>
+          <td>${escapeHtml(bid.source || "")}</td>
+          <td>${escapeHtml(bid.estimator || "")}</td>
+          <td>${escapeHtml(bid.notes || "")}</td>
+          <td><div class="bid-actions">${actionButtons(bid)}</div></td>
+        `;
+        body.appendChild(row);
+      });
+    }
+
+    async function addBid() {
+      try {
+        const payload = {
+          project_name: document.getElementById("projectName").value.trim(),
+          company: document.getElementById("company").value.trim(),
+          due_date: document.getElementById("dueDate").value,
+          source: document.getElementById("source").value,
+          estimator: document.getElementById("estimator").value.trim(),
+          status: document.getElementById("status").value,
+          notes: document.getElementById("notes").value.trim()
+        };
+
+        if (!payload.project_name || !payload.company) {
+          alert("Project Name and Company are required.");
+          return;
+        }
+
+        await api("/bids", {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+
+        document.getElementById("projectName").value = "";
+        document.getElementById("company").value = "";
+        document.getElementById("dueDate").value = "";
+        document.getElementById("source").value = "";
+        document.getElementById("estimator").value = "";
+        document.getElementById("status").value = "Opportunities";
+        document.getElementById("notes").value = "";
+
+        await loadBids();
+        showTab("board");
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function updateStatus(id, status) {
+      try {
+        await api("/bids/" + id + "/status", {
+          method: "POST",
+          body: JSON.stringify({ status })
+        });
+
+        await loadBids();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function deleteBid(id) {
+      if (!confirm("Delete this bid opportunity?")) return;
+
+      try {
+        await api("/bids/" + id, {
+          method: "DELETE"
+        });
+
+        await loadBids();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function createUser() {
+      try {
+        const email = document.getElementById("newUserEmail").value.trim();
+        const password = document.getElementById("newUserPassword").value.trim();
+        const role = document.getElementById("newUserRole").value;
+
+        await api("/auth/users", {
+          method: "POST",
+          body: JSON.stringify({ email, password, role })
+        });
+
+        document.getElementById("newUserEmail").value = "";
+        document.getElementById("newUserPassword").value = "";
+        document.getElementById("newUserRole").value = "user";
+
+        await loadUsers();
+        alert("User created.");
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    async function loadUsers() {
+      if (!currentUser || currentUser.role !== "admin") return;
+
+      try {
+        const users = await api("/auth/users", { method: "GET" });
+        const body = document.getElementById("usersTableBody");
+        body.innerHTML = "";
+
+        users.forEach(user => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${escapeHtml(user.email)}</td>
+            <td>${escapeHtml(user.role)}</td>
+            <td>${user.is_active ? "Yes" : "No"}</td>
+            <td>${escapeHtml(user.created_at ? formatDate(user.created_at) : "")}</td>
+          `;
+          body.appendChild(row);
+        });
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    function formatDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString();
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    boot();
+  </script>
+</body>
+</html>
