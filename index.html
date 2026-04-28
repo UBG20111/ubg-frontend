@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>UBG Bid Platform</title>
+  <title>UBG Bid and Proposal Management</title>
 
   <style>
     :root {
@@ -17,6 +17,8 @@
       --line: #e6ddd1;
       --line-strong: #d0c5b6;
       --accent: #111111;
+      --accent-soft: #ece7df;
+      --accent-mid: #7d7469;
       --blue: #2c5e86;
       --blue-soft: #eaf1f7;
       --positive: #2e7d32;
@@ -25,10 +27,15 @@
       --warning-bg: #fbefe7;
       --danger: #9b3232;
       --danger-bg: #fbe9e9;
-      --radius-lg: 22px;
+      --info: #334155;
+      --info-bg: #edf2f7;
+      --radius-lg: 20px;
       --radius-md: 14px;
-      --shadow: 0 14px 30px rgba(23, 26, 31, 0.08);
-      --shadow-soft: 0 6px 18px rgba(23, 26, 31, 0.05);
+      --radius-sm: 10px;
+      --shadow: 0 14px 30px rgba(23,26,31,.08);
+      --shadow-soft: 0 6px 18px rgba(23,26,31,.05);
+      --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --transition: 180ms ease;
     }
 
     * {
@@ -37,449 +44,16 @@
 
     body {
       margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: var(--font-sans);
       background:
-        radial-gradient(circle at top right, rgba(44, 94, 134, 0.08), transparent 24%),
+        radial-gradient(circle at top right, rgba(44,94,134,.08), transparent 24%),
         linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
       color: var(--ink);
     }
 
-    .app-shell {
-      min-height: 100vh;
-      padding: 20px;
+    .hidden {
+      display: none !important;
     }
-
-    .frame {
-      max-width: 1600px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid rgba(17, 17, 17, 0.06);
-      border-radius: 26px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-
-    .topbar {
-      padding: 22px;
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, #ffffff 0%, #faf7f2 100%);
-      display: grid;
-      gap: 18px;
-    }
-
-    .topbar-main {
-      display: grid;
-      grid-template-columns: minmax(320px, 1fr) minmax(420px, 1.1fr);
-      gap: 20px;
-      align-items: start;
-    }
-
-    .brand-title {
-      font-size: 2rem;
-      line-height: 1.05;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      margin: 0;
-    }
-
-    .brand-subtitle {
-      color: var(--muted);
-      margin: 8px 0 0;
-      line-height: 1.45;
-      max-width: 720px;
-    }
-
-    .header-panel {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 16px;
-      display: grid;
-      gap: 10px;
-      box-shadow: var(--shadow-soft);
-    }
-
-    .header-panel-title {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 900;
-      color: var(--muted);
-    }
-
-    .header-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: flex-end;
-      align-items: center;
-    }
-
-    .btn,
-    button,
-    input,
-    select,
-    textarea {
-      font-family: inherit;
-    }
-
-    .btn {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--ink);
-      border-radius: 12px;
-      padding: 10px 13px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: 180ms ease;
-      box-shadow: 0 1px 1px rgba(17, 17, 17, 0.02);
-      font-weight: 800;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      border-color: var(--line-strong);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .btn.primary {
-      background: var(--blue);
-      color: #fff;
-      border-color: var(--blue);
-    }
-
-    .btn.black {
-      background: #111;
-      color: #fff;
-      border-color: #111;
-    }
-
-    .btn.danger {
-      background: #fff0f0;
-      border-color: #efc0c0;
-      color: #7a1f1f;
-    }
-
-    .btn.success {
-      background: var(--positive-bg);
-      border-color: #b8dbc7;
-      color: var(--positive);
-    }
-
-    .btn.warn {
-      background: var(--warning-bg);
-      border-color: #ecd5be;
-      color: var(--warning);
-    }
-
-    .navs {
-      padding: 16px 22px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      background: linear-gradient(180deg, #faf7f2 0%, #f4efe8 100%);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: 999px;
-      padding: 11px 16px;
-      color: var(--muted);
-      cursor: pointer;
-      font-weight: 900;
-    }
-
-    .tab-btn.active {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-      box-shadow: var(--shadow-soft);
-    }
-
-    .content-area {
-      padding: 22px;
-      display: grid;
-      gap: 18px;
-    }
-
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(140px, 1fr));
-      gap: 14px;
-    }
-
-    .kpi-card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 16px;
-      box-shadow: var(--shadow-soft);
-      display: grid;
-      gap: 6px;
-      min-height: 110px;
-    }
-
-    .kpi-label {
-      font-size: 0.74rem;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      font-weight: 900;
-      color: var(--muted);
-    }
-
-    .kpi-value {
-      font-size: 2rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-    }
-
-    .kpi-note {
-      color: var(--muted);
-      font-size: 0.85rem;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-soft);
-      overflow: hidden;
-    }
-
-    .panel-header {
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .panel-header h2 {
-      margin: 0;
-      font-size: 1.06rem;
-    }
-
-    .panel-header p {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .panel-body {
-      padding: 18px 20px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(180px, 1fr));
-      gap: 12px;
-      align-items: end;
-    }
-
-    .form-grid .wide {
-      grid-column: span 2;
-    }
-
-    label {
-      display: grid;
-      gap: 6px;
-      font-size: 0.82rem;
-      color: var(--muted);
-      font-weight: 800;
-    }
-
-    input,
-    select,
-    textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 11px 12px;
-      background: #fff;
-      color: var(--ink);
-      outline: none;
-      font-size: 0.95rem;
-    }
-
-    textarea {
-      min-height: 92px;
-      resize: vertical;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: var(--blue);
-      box-shadow: 0 0 0 4px rgba(44, 94, 134, 0.12);
-    }
-
-    .board {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(220px, 1fr));
-      gap: 14px;
-      align-items: start;
-      overflow-x: auto;
-      padding-bottom: 6px;
-    }
-
-    .column {
-      background: var(--panel-alt);
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      min-height: 420px;
-      overflow: hidden;
-    }
-
-    .column-header {
-      padding: 14px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.74);
-    }
-
-    .column-title {
-      font-weight: 900;
-      font-size: 0.95rem;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 28px;
-      height: 28px;
-      padding: 0 8px;
-      border-radius: 999px;
-      background: #111;
-      color: #fff;
-      font-size: 0.8rem;
-      font-weight: 900;
-    }
-
-    .column-body {
-      padding: 12px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .bid-card {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 3px 10px rgba(17, 17, 17, 0.04);
-      display: grid;
-      gap: 10px;
-    }
-
-    .bid-card h3 {
-      margin: 0;
-      font-size: 1rem;
-      letter-spacing: -0.02em;
-    }
-
-    .bid-meta {
-      display: grid;
-      gap: 5px;
-      color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.35;
-    }
-
-    .bid-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding-top: 4px;
-    }
-
-    .mini-btn {
-      border: 1px solid var(--line);
-      background: #fff;
-      border-radius: 10px;
-      padding: 8px 9px;
-      cursor: pointer;
-      font-size: 0.78rem;
-      font-weight: 900;
-    }
-
-    .mini-btn.accept {
-      color: var(--positive);
-      background: var(--positive-bg);
-      border-color: #c5e4ca;
-    }
-
-    .mini-btn.decline {
-      color: var(--danger);
-      background: var(--danger-bg);
-      border-color: #f0caca;
-    }
-
-    .mini-btn.submit {
-      color: var(--blue);
-      background: var(--blue-soft);
-      border-color: #c7dbea;
-    }
-
-    .mini-btn.win {
-      color: var(--positive);
-      background: var(--positive-bg);
-      border-color: #c5e4ca;
-    }
-
-    .mini-btn.delete {
-      color: var(--danger);
-      background: #fff;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 900px;
-    }
-
-    th,
-    td {
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      vertical-align: top;
-      font-size: 0.9rem;
-    }
-
-    th {
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.72rem;
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      border-radius: 999px;
-      padding: 6px 9px;
-      font-size: 0.75rem;
-      font-weight: 900;
-      background: #f1f1f1;
-    }
-
-    .status-Opportunities { background: var(--blue-soft); color: var(--blue); }
-    .status-Bidding { background: var(--warning-bg); color: var(--warning); }
-    .status-Submitted { background: #f0eefc; color: #5c4a9a; }
-    .status-Won { background: var(--positive-bg); color: var(--positive); }
-    .status-Lost { background: var(--danger-bg); color: var(--danger); }
 
     .auth-wrap {
       min-height: 100vh;
@@ -489,7 +63,7 @@
     }
 
     .auth-card {
-      width: min(520px, 100%);
+      width: min(540px, 100%);
       background: #fff;
       border: 1px solid var(--line);
       border-radius: 26px;
@@ -498,14 +72,22 @@
     }
 
     .auth-header {
-      padding: 24px;
+      padding: 26px;
       background: linear-gradient(180deg, #ffffff 0%, #faf7f2 100%);
       border-bottom: 1px solid var(--line);
     }
 
+    .auth-logo {
+      font-size: 2.15rem;
+      font-weight: 900;
+      letter-spacing: -0.08em;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
     .auth-header h1 {
       margin: 0;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       letter-spacing: -0.04em;
     }
 
@@ -543,68 +125,942 @@
       display: block;
     }
 
-    .hidden {
-      display: none !important;
+    .app-shell {
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .frame {
+      max-width: 1600px;
+      margin: 0 auto;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(17,17,17,.06);
+      backdrop-filter: blur(10px);
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .topbar {
+      width: 100%;
+      padding: 18px 18px 16px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #faf7f2 100%);
+      display: grid;
+      gap: 12px;
+    }
+
+    .topbar-main {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(420px, 1fr) minmax(640px, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .brand {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      min-width: 0;
+      gap: 18px;
+    }
+
+    .brand-mark {
+      display: grid;
+      gap: 4px;
+      line-height: 1;
+    }
+
+    .brand-logo {
+      font-size: 4.75rem;
+      font-weight: 950;
+      letter-spacing: -0.13em;
+      color: #111;
+    }
+
+    .brand-name {
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: #111;
+    }
+
+    .brand-sub {
+      margin-top: 4px;
+      font-size: .76rem;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .right-head {
+      display: grid;
+      gap: 10px;
+      justify-items: end;
+    }
+
+    .header-actions {
+      width: 100%;
+      max-width: none;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn,
+    button,
+    select,
+    input,
+    textarea {
+      font-family: inherit;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: .92rem;
+      cursor: pointer;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition), background var(--transition);
+      box-shadow: 0 1px 1px rgba(17,17,17,.02);
+      font-weight: 800;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      color:#fff;
+      border-color: var(--blue);
+    }
+
+    .btn.black {
+      background:#111;
+      color:#fff;
+      border-color:#111;
+    }
+
+    .btn.secondary {
+      background: #fff;
+      border-color: #cfc6b8;
+    }
+
+    .btn.ghost {
+      background: transparent;
+    }
+
+    .btn.warn {
+      background: var(--warning-bg);
+      border-color: #ecd5be;
+      color:var(--warning);
+    }
+
+    .btn.danger {
+      background: #fff0f0;
+      border-color: #efc0c0;
+      color:#7a1f1f;
+    }
+
+    .btn:disabled {
+      opacity:.5;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+    .header-actions .btn {
+      background:#111;
+      color:#fff;
+      border-color:#111;
+      font-size:.84rem;
+      font-weight:800;
+      padding:10px 12px;
+    }
+
+    .user-row-top {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 2px;
+    }
+
+    .user-email-top {
+      font-size: 0.76rem;
+      font-weight: 600;
+      line-height: 1.15;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+      margin: 0;
+    }
+
+    .search-center-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 0;
+      width: 100%;
+    }
+
+    .search-box {
+      min-width: 0;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 0 12px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      height: 44px;
+    }
+
+    .search-box-wide {
+      width: min(980px, 100%);
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .search-box input {
+      border:none;
+      outline:none;
+      background:transparent;
+      width:100%;
+      font-size:.94rem;
+    }
+
+    .navs {
+      padding: 2px 22px 18px;
+      background: linear-gradient(180deg, #faf7f2 0%, #f4efe8 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .primary-tabs,
+    .secondary-tabs {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .primary-tabs {
+      padding-top: 16px;
+    }
+
+    .secondary-tabs {
+      padding-top: 14px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 11px 16px;
+      color: var(--muted);
+      cursor:pointer;
+      font-weight:800;
+      letter-spacing:.01em;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .screen {
+      display:none;
+    }
+
+    .screen.active {
+      display:block;
+    }
+
+    .content-area {
+      padding: 22px;
+    }
+
+    .hero {
+      display:grid;
+      grid-template-columns: 1.3fr .9fr;
+      gap:18px;
+      margin-bottom:18px;
+    }
+
+    .hero-card {
+      background:linear-gradient(180deg,#111111 0%, #161a1f 100%);
+      color:#fff;
+      padding:28px;
+      border-radius: 24px;
+      min-height: 176px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-card::after {
+      content:'';
+      position:absolute;
+      inset:auto -60px -90px auto;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(255,255,255,.18) 0%, rgba(255,255,255,0) 72%);
+    }
+
+    .hero-card h1 {
+      margin:0 0 8px;
+      font-size: 2rem;
+      line-height:1.1;
+      letter-spacing:-.04em;
+    }
+
+    .hero-card p {
+      margin:0;
+      max-width:760px;
+      color: rgba(255,255,255,.86);
+      line-height:1.55;
+    }
+
+    .hero-meta {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+
+    .mini-card {
+      background: var(--panel);
+      border:1px solid var(--line);
+      border-radius: 20px;
+      padding:20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .mini-card .eyebrow,
+    .section-title .eyebrow {
+      color:var(--muted);
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:800;
+    }
+
+    .mini-card .value {
+      margin-top:8px;
+      font-size:1.8rem;
+      font-weight:900;
+      letter-spacing:-.04em;
+    }
+
+    .mini-card .sub {
+      margin-top:8px;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .kpi-grid {
+      display:grid;
+      grid-template-columns: repeat(5, minmax(190px,1fr));
+      gap:16px;
+      margin-bottom:18px;
+    }
+
+    .queue-grid {
+      display:grid;
+      grid-template-columns: repeat(4, minmax(220px,1fr));
+      gap:16px;
+      margin-bottom:18px;
+    }
+
+    .card {
+      background: var(--panel);
+      border:1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card-header {
+      padding: 18px 20px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+    }
+
+    .card-body {
+      padding: 18px 20px;
+    }
+
+    .kpi-grid .card .card-body,
+    .queue-grid .card .card-body {
+      text-align:center;
+    }
+
+    .kpi-grid .eyebrow,
+    .queue-grid .eyebrow {
+      font-weight:900;
+      text-align:center;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: .78rem;
+    }
+
+    .kpi-grid .value,
+    .queue-grid .value {
+      letter-spacing:-.02em;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-top: 6px;
+    }
+
+    .kpi-grid .sub,
+    .queue-grid .sub {
+      font-size:.78rem;
+      text-align:center;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .kpi-grid .card,
+    .queue-grid .card {
+      min-height: 118px;
+    }
+
+    .section-title h2,
+    .card-header h2,
+    .card-header h3 {
+      margin:0;
+      font-size:1.02rem;
+    }
+
+    .section-title p,
+    .card-header p {
+      margin:5px 0 0;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .dashboard-grid {
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+    }
+
+    .layout-grid {
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .filters {
+      position: sticky;
+      top: 16px;
+    }
+
+    .filter-grid {
+      display:grid;
+      gap:12px;
+    }
+
+    label,
+    label.filter-label {
+      display:grid;
+      gap:6px;
+      font-size:.88rem;
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width:100%;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background:#fff;
+      color:var(--ink);
+      outline:none;
+      font-size: .94rem;
+    }
+
+    textarea {
+      min-height:90px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 4px rgba(44,94,134,.12);
+    }
+
+    .filter-actions {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .table-wrap {
+      overflow:auto;
+    }
+
+    .table-wrap.wide-table {
+      max-height: 70vh;
+    }
+
+    .table-wrap.wide-table table {
+      min-width: 1380px;
+    }
+
+    table {
+      width:100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size:.93rem;
+    }
+
+    th,
+    td {
+      padding: 9px 10px;
+      border-bottom:1px solid var(--line);
+      white-space:nowrap;
+      vertical-align:middle;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #fbf8f4;
+      z-index:2;
+      color:var(--muted);
+      text-transform:uppercase;
+      font-size:.74rem;
+      letter-spacing:.08em;
+      text-align:left;
+      cursor:pointer;
+    }
+
+    td.wrap {
+      white-space:normal;
+      min-width:220px;
+      line-height:1.45;
+    }
+
+    tbody tr {
+      transition: background var(--transition);
+    }
+
+    tbody tr:hover {
+      background: #faf7f2;
+    }
+
+    tbody tr.selected {
+      background: #f7f1e8;
+    }
+
+    .badge {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:.02em;
+      border:1px solid transparent;
+    }
+
+    .badge.phase {
+      background: var(--info-bg);
+      color: var(--info);
+      border-color:#cdd7e5;
+    }
+
+    .badge.pending,
+    .badge.Opportunities {
+      background: #f1f1f1;
+      color:#555;
+      border-color:#ddd;
+    }
+
+    .badge.accepted,
+    .badge.Bidding {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border-color:#efd792;
+    }
+
+    .badge.declined,
+    .badge.Lost {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-color:#e6bcbc;
+    }
+
+    .badge.submitted,
+    .badge.Submitted {
+      background: #f2f3f5;
+      color:#374151;
+      border-color:#d8dde4;
+    }
+
+    .badge.awarded,
+    .badge.Won {
+      background: var(--positive-bg);
+      color: var(--positive);
+      border-color:#b8dbc7;
+    }
+
+    .row-actions {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .row-actions .btn {
+      padding:8px 10px;
+      font-size:.8rem;
+      border-radius:10px;
+    }
+
+    .view-toolbar {
+      display:grid;
+      grid-template-columns: minmax(220px,1.2fr) repeat(5, minmax(150px,.75fr)) auto;
+      gap:10px;
+      margin-bottom:18px;
+      align-items:center;
+    }
+
+    .view-toolbar .search-box {
+      min-width: 0;
+      width:100%;
+    }
+
+    .inline-select {
+      width:100%;
+      padding: 11px 12px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#fff;
+      color:var(--ink);
+    }
+
+    .queue-card-grid {
+      display:grid;
+      grid-template-columns: repeat(3, minmax(220px,1fr));
+      gap:16px;
+      margin-bottom:18px;
+    }
+
+    .queue-card-grid .card .value {
+      font-size:1.7rem;
+      font-weight:900;
+      margin-top:8px;
+    }
+
+    .form-grid {
+      display:grid;
+      grid-template-columns: repeat(2, minmax(220px,1fr));
+      gap:14px;
+    }
+
+    .form-grid .full {
+      grid-column: 1 / -1;
+    }
+
+    .stack-grid {
+      display:grid;
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      gap:12px;
+    }
+
+    .muted {
+      color:var(--muted);
+    }
+
+    .footnote {
+      color:var(--muted);
+      font-size:.84rem;
+      line-height:1.5;
+    }
+
+    .admin-grid {
+      display:grid;
+      grid-template-columns: repeat(2, minmax(300px, 1fr));
+      gap:18px;
+    }
+
+    .list-editor {
+      display:grid;
+      gap:12px;
     }
 
     .empty-state {
-      color: var(--muted);
-      font-size: 0.9rem;
-      padding: 12px;
-      border: 1px dashed var(--line-strong);
+      padding:32px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    .notice {
+      padding: 12px 14px;
       border-radius: 14px;
-      text-align: center;
-      background: rgba(255,255,255,0.6);
+      background:#f5f5f5;
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:.9rem;
     }
 
-    .small-muted {
-      color: var(--muted);
-      font-size: 0.85rem;
+    .drawer {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      bottom: 16px;
+      width: 440px;
+      background: #fff;
+      border:1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 30px 60px rgba(17,17,17,.16);
+      transform: translateX(calc(100% + 24px));
+      transition: transform 220ms ease;
+      z-index: 80;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
     }
 
-    @media (max-width: 1100px) {
+    .drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding:20px 22px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .drawer-body {
+      padding:18px 22px 22px;
+      overflow:auto;
+      display:grid;
+      gap:18px;
+    }
+
+    .drawer-section {
+      display:grid;
+      gap:10px;
+    }
+
+    .kv {
+      display:grid;
+      grid-template-columns: 140px 1fr;
+      gap:10px;
+      font-size:.92rem;
+    }
+
+    .kv-label {
+      color:var(--muted);
+      font-weight:800;
+    }
+
+    .overlay {
+      position: fixed;
+      inset:0;
+      background: rgba(17,17,17,.28);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity 180ms ease;
+      z-index:70;
+    }
+
+    .overlay.open {
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display:grid;
+      place-items:center;
+      padding:24px;
+      z-index:90;
+      pointer-events:none;
+      opacity:0;
+      transition:opacity 160ms ease;
+    }
+
+    .modal.open {
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .modal-card {
+      width:min(900px, 100%);
+      max-height: calc(100vh - 60px);
+      overflow:auto;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 30px 60px rgba(17,17,17,.2);
+    }
+
+    .modal-header {
+      padding:20px 22px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .modal-body {
+      padding:20px 22px 24px;
+      display:grid;
+      gap:18px;
+    }
+
+    .toasts {
+      position: fixed;
+      left: 24px;
+      bottom:24px;
+      display:grid;
+      gap:10px;
+      z-index:100;
+    }
+
+    .toast {
+      background:#111;
+      color:#fff;
+      padding:12px 14px;
+      border-radius:14px;
+      box-shadow: 0 16px 24px rgba(17,17,17,.22);
+      min-width:260px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 1280px) {
       .topbar-main {
         grid-template-columns: 1fr;
       }
 
-      .kpi-grid {
-        grid-template-columns: repeat(2, minmax(140px, 1fr));
+      .right-head {
+        justify-items: start;
       }
 
-      .form-grid {
-        grid-template-columns: repeat(2, minmax(180px, 1fr));
+      .header-actions,
+      .user-row-top {
+        justify-content: flex-start;
       }
 
-      .board {
-        grid-template-columns: repeat(5, 280px);
+      .user-email-top {
+        text-align: left;
+      }
+
+      .hero,
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .view-toolbar {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .queue-card-grid {
+        grid-template-columns: repeat(2, minmax(180px,1fr));
+      }
+
+      .filters {
+        position: static;
+      }
+
+      .kpi-grid,
+      .queue-grid,
+      .status-grid,
+      .hero-meta {
+        grid-template-columns: repeat(2, minmax(180px,1fr));
+      }
+
+      .admin-grid {
+        grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 860px) {
       .app-shell {
         padding: 10px;
       }
 
       .frame {
-        border-radius: 18px;
+        border-radius: 20px;
       }
 
-      .topbar,
-      .content-area {
-        padding: 16px;
+      .content-area,
+      .navs,
+      .topbar {
+        padding-left: 14px;
+        padding-right: 14px;
       }
 
-      .brand-title {
-        font-size: 1.55rem;
+      .brand-logo {
+        font-size: 3.1rem;
+      }
+
+      .brand-name {
+        font-size: .82rem;
+      }
+
+      .header-actions {
+        justify-content:flex-start;
       }
 
       .kpi-grid,
-      .form-grid {
+      .queue-grid,
+      .status-grid,
+      .hero-meta,
+      .form-grid,
+      .stack-grid {
         grid-template-columns: 1fr;
       }
 
-      .form-grid .wide {
-        grid-column: span 1;
+      .drawer {
+        width: calc(100vw - 20px);
+        top:10px;
+        right:10px;
+        bottom:10px;
+      }
+
+      .search-box {
+        min-width: 100%;
+      }
+
+      .view-toolbar {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -614,7 +1070,8 @@
   <div id="authScreen" class="auth-wrap">
     <div class="auth-card">
       <div class="auth-header">
-        <h1>UBG Bid Platform</h1>
+        <div class="auth-logo">UBG</div>
+        <h1>Bid and Proposal Management</h1>
         <p id="authIntro">Secure access for United Building Group bid opportunities.</p>
       </div>
 
@@ -634,7 +1091,7 @@
 
           <button class="btn black" onclick="setupAdmin()">Create Admin Login</button>
 
-          <div class="small-muted">
+          <div class="footnote">
             This appears only when no users exist. The first user becomes the admin.
           </div>
         </div>
@@ -660,262 +1117,453 @@
     <div class="frame">
       <header class="topbar">
         <div class="topbar-main">
-          <div>
-            <h1 class="brand-title">UBG Bid Command Center</h1>
-            <p class="brand-subtitle">
-              Bid opportunity intake, review, pursuit tracking, submission status, and outcome management for United Building Group.
-            </p>
+          <div class="brand">
+            <div class="brand-mark">
+              <div class="brand-logo">UBG</div>
+              <div class="brand-name">United Building Group</div>
+              <div class="brand-sub">Bid and Proposal Management</div>
+            </div>
           </div>
 
-          <div class="header-panel">
-            <div class="header-panel-title">Current Session</div>
-            <div id="currentUser" class="small-muted">Loading user...</div>
+          <div class="right-head">
             <div class="header-actions">
+              <button class="btn" onclick="openAddBidModal()">Add Bid</button>
               <button class="btn" onclick="loadBids()">Refresh</button>
-              <button class="btn danger" onclick="logout()">Logout</button>
+              <button class="btn" onclick="exportCsv()">Export CSV</button>
+              <button class="btn" onclick="showScreen('admin')">Admin</button>
+              <button class="btn" onclick="logout()">Logout</button>
             </div>
+
+            <div class="user-row-top">
+              <div id="currentUser" class="user-email-top">Loading user...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-center-row">
+          <div class="search-box search-box-wide">
+            <span>Search</span>
+            <input id="globalSearch" type="text" placeholder="Search project, GC, estimator, source, notes..." oninput="renderCurrentScreen()" />
           </div>
         </div>
       </header>
 
       <nav class="navs">
-        <button id="tabBoard" class="tab-btn active" onclick="showTab('board')">Bid Board</button>
-        <button id="tabList" class="tab-btn" onclick="showTab('list')">Bid List</button>
-        <button id="tabAdd" class="tab-btn" onclick="showTab('add')">Add Opportunity</button>
-        <button id="tabUsers" class="tab-btn hidden" onclick="showTab('users')">Users</button>
+        <div class="primary-tabs">
+          <button id="screenDashboardTab" class="tab-btn active" onclick="showScreen('dashboard')">Dashboard</button>
+          <button id="screenOpportunitiesTab" class="tab-btn" onclick="showScreen('opportunities')">Bid Opportunities</button>
+          <button id="screenBoardTab" class="tab-btn" onclick="showScreen('board')">Bid Board</button>
+          <button id="screenPipelineTab" class="tab-btn" onclick="showScreen('pipeline')">Proposal Pipeline</button>
+          <button id="screenAdminTab" class="tab-btn" onclick="showScreen('admin')">Settings / Admin</button>
+        </div>
+
+        <div class="secondary-tabs">
+          <button id="statusAllTab" class="tab-btn active" onclick="setStatusFilter('All')">All</button>
+          <button id="statusOpportunitiesTab" class="tab-btn" onclick="setStatusFilter('Opportunities')">Opportunities</button>
+          <button id="statusBiddingTab" class="tab-btn" onclick="setStatusFilter('Bidding')">Bidding</button>
+          <button id="statusSubmittedTab" class="tab-btn" onclick="setStatusFilter('Submitted')">Submitted</button>
+          <button id="statusWonTab" class="tab-btn" onclick="setStatusFilter('Won')">Won</button>
+          <button id="statusLostTab" class="tab-btn" onclick="setStatusFilter('Lost')">Lost</button>
+        </div>
       </nav>
 
       <main class="content-area">
-        <section class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-label">Opportunities</div>
-            <div id="kpiOpportunities" class="kpi-value">0</div>
-            <div class="kpi-note">New invites / intake</div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-label">Bidding</div>
-            <div id="kpiBidding" class="kpi-value">0</div>
-            <div class="kpi-note">Accepted pursuits</div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-label">Submitted</div>
-            <div id="kpiSubmitted" class="kpi-value">0</div>
-            <div class="kpi-note">Proposals submitted</div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-label">Won</div>
-            <div id="kpiWon" class="kpi-value">0</div>
-            <div class="kpi-note">Awarded work</div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-label">Lost</div>
-            <div id="kpiLost" class="kpi-value">0</div>
-            <div class="kpi-note">No bid / lost</div>
-          </div>
-        </section>
-
-        <section id="boardView" class="panel">
-          <div class="panel-header">
-            <div>
-              <h2>Bid Board</h2>
-              <p>Move opportunities from intake to bidding, submitted, won, or lost.</p>
+        <section id="screenDashboard" class="screen active">
+          <div class="hero">
+            <div class="hero-card">
+              <h1>Bid Command Center</h1>
+              <p>
+                Track invitations, bid intent, active pursuits, submitted proposals, and outcomes from one UBG operations dashboard.
+              </p>
             </div>
-            <button class="btn primary" onclick="showTab('add')">Add Opportunity</button>
-          </div>
 
-          <div class="panel-body">
-            <div class="board">
-              <div class="column">
-                <div class="column-header">
-                  <div class="column-title">Opportunities</div>
-                  <div id="countOpportunities" class="badge">0</div>
-                </div>
-                <div id="colOpportunities" class="column-body"></div>
+            <div class="hero-meta">
+              <div class="mini-card">
+                <div class="eyebrow">Active Pursuits</div>
+                <div id="activePursuitsValue" class="value">0</div>
+                <div class="sub">Bidding plus submitted proposals</div>
               </div>
 
-              <div class="column">
-                <div class="column-header">
-                  <div class="column-title">Bidding</div>
-                  <div id="countBidding" class="badge">0</div>
-                </div>
-                <div id="colBidding" class="column-body"></div>
-              </div>
-
-              <div class="column">
-                <div class="column-header">
-                  <div class="column-title">Submitted</div>
-                  <div id="countSubmitted" class="badge">0</div>
-                </div>
-                <div id="colSubmitted" class="column-body"></div>
-              </div>
-
-              <div class="column">
-                <div class="column-header">
-                  <div class="column-title">Won</div>
-                  <div id="countWon" class="badge">0</div>
-                </div>
-                <div id="colWon" class="column-body"></div>
-              </div>
-
-              <div class="column">
-                <div class="column-header">
-                  <div class="column-title">Lost</div>
-                  <div id="countLost" class="badge">0</div>
-                </div>
-                <div id="colLost" class="column-body"></div>
+              <div class="mini-card">
+                <div class="eyebrow">Total Records</div>
+                <div id="totalRecordsValue" class="value">0</div>
+                <div class="sub">All bid opportunities in database</div>
               </div>
             </div>
           </div>
-        </section>
 
-        <section id="listView" class="panel hidden">
-          <div class="panel-header">
-            <div>
-              <h2>Bid List</h2>
-              <p>Table view of all current bid opportunities.</p>
+          <div class="kpi-grid">
+            <div class="card">
+              <div class="card-body">
+                <div class="eyebrow">Opportunities</div>
+                <div id="kpiOpportunities" class="value">0</div>
+                <div class="sub">New invites / intake</div>
+              </div>
             </div>
-            <button class="btn" onclick="loadBids()">Refresh List</button>
+
+            <div class="card">
+              <div class="card-body">
+                <div class="eyebrow">Bidding</div>
+                <div id="kpiBidding" class="value">0</div>
+                <div class="sub">Accepted pursuits</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <div class="eyebrow">Submitted</div>
+                <div id="kpiSubmitted" class="value">0</div>
+                <div class="sub">Proposals submitted</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <div class="eyebrow">Won</div>
+                <div id="kpiWon" class="value">0</div>
+                <div class="sub">Awarded work</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <div class="eyebrow">Lost</div>
+                <div id="kpiLost" class="value">0</div>
+                <div class="sub">No bid / lost</div>
+              </div>
+            </div>
           </div>
 
-          <div class="panel-body">
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Project</th>
-                    <th>Company / GC</th>
-                    <th>Status</th>
-                    <th>Due Date</th>
-                    <th>Source</th>
-                    <th>Estimator</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="bidTableBody"></tbody>
-              </table>
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h2>Recent Bid Opportunities</h2>
+                  <p>Newest records currently loaded from the database.</p>
+                </div>
+                <button class="btn secondary" onclick="showScreen('opportunities')">View All</button>
+              </div>
+              <div class="card-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Project</th>
+                        <th>Company / GC</th>
+                        <th>Status</th>
+                        <th>Due Date</th>
+                        <th>Source</th>
+                      </tr>
+                    </thead>
+                    <tbody id="recentTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h2>Workflow Summary</h2>
+                  <p>Current distribution by stage.</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div id="summaryList" class="list-editor"></div>
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="addView" class="panel hidden">
-          <div class="panel-header">
-            <div>
-              <h2>Add Bid Opportunity</h2>
-              <p>Create a manual bid opportunity. Email/platform intake will connect to this same pipeline later.</p>
+        <section id="screenOpportunities" class="screen">
+          <div class="view-toolbar">
+            <div class="search-box">
+              <span>Filter</span>
+              <input id="tableSearch" type="text" placeholder="Search table..." oninput="renderOpportunities()" />
             </div>
+
+            <select id="sourceFilter" class="inline-select" onchange="renderOpportunities()">
+              <option value="All">All Sources</option>
+              <option value="Manual Entry">Manual Entry</option>
+              <option value="bids@unitedbuildinggroup.com">bids@unitedbuildinggroup.com</option>
+              <option value="BuildingConnected">BuildingConnected</option>
+              <option value="Procore">Procore</option>
+              <option value="PlanHub">PlanHub</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <select id="estimatorFilter" class="inline-select" onchange="renderOpportunities()">
+              <option value="All">All Estimators</option>
+            </select>
+
+            <select id="sortFilter" class="inline-select" onchange="renderOpportunities()">
+              <option value="created_desc">Newest First</option>
+              <option value="due_asc">Due Date Asc</option>
+              <option value="due_desc">Due Date Desc</option>
+              <option value="project_asc">Project A-Z</option>
+              <option value="company_asc">Company A-Z</option>
+            </select>
+
+            <select id="quickStatusFilter" class="inline-select" onchange="setStatusFilter(this.value)">
+              <option value="All">All Statuses</option>
+              <option value="Opportunities">Opportunities</option>
+              <option value="Bidding">Bidding</option>
+              <option value="Submitted">Submitted</option>
+              <option value="Won">Won</option>
+              <option value="Lost">Lost</option>
+            </select>
+
+            <button class="btn secondary" onclick="clearFilters()">Clear Filters</button>
+            <button class="btn primary" onclick="openAddBidModal()">Add Bid</button>
           </div>
 
-          <div class="panel-body">
-            <div class="form-grid">
-              <label>
-                Project Name
-                <input id="projectName" placeholder="Project name" />
-              </label>
-
-              <label>
-                Company / GC
-                <input id="company" placeholder="Company or GC" />
-              </label>
-
-              <label>
-                Due Date
-                <input id="dueDate" type="date" />
-              </label>
-
-              <label>
-                Source
-                <select id="source">
-                  <option value="">Select source</option>
-                  <option value="Manual Entry">Manual Entry</option>
-                  <option value="bids@unitedbuildinggroup.com">bids@unitedbuildinggroup.com</option>
-                  <option value="BuildingConnected">BuildingConnected</option>
-                  <option value="Procore">Procore</option>
-                  <option value="PlanHub">PlanHub</option>
-                  <option value="Other">Other</option>
-                </select>
-              </label>
-
-              <label>
-                Estimator
-                <input id="estimator" placeholder="Estimator" />
-              </label>
-
-              <label>
-                Initial Status
-                <select id="status">
-                  <option value="Opportunities">Opportunities</option>
-                  <option value="Bidding">Bidding</option>
-                  <option value="Submitted">Submitted</option>
-                  <option value="Won">Won</option>
-                  <option value="Lost">Lost</option>
-                </select>
-              </label>
-
-              <label class="wide">
-                Notes
-                <textarea id="notes" placeholder="Scope, location, invite notes, addenda notes, etc."></textarea>
-              </label>
-
+          <div class="card">
+            <div class="card-header">
               <div>
-                <button class="btn black" onclick="addBid()">Add Opportunity</button>
+                <h2>Bid Opportunities</h2>
+                <p>Review, accept, decline, advance, or reopen bid opportunities.</p>
+              </div>
+              <span id="opportunityCountBadge" class="badge phase">0 Records</span>
+            </div>
+
+            <div class="card-body">
+              <div class="table-wrap wide-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Project</th>
+                      <th>Company / GC</th>
+                      <th>Status</th>
+                      <th>Due Date</th>
+                      <th>Source</th>
+                      <th>Estimator</th>
+                      <th>Notes</th>
+                      <th>Created</th>
+                      <th>Updated</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="opportunitiesTableBody"></tbody>
+                </table>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="usersView" class="panel hidden">
-          <div class="panel-header">
-            <div>
-              <h2>User Management</h2>
-              <p>Add approved users who can access this hidden-page application.</p>
-            </div>
-            <button class="btn" onclick="loadUsers()">Refresh Users</button>
-          </div>
-
-          <div class="panel-body">
-            <div class="form-grid">
-              <label>
-                New User Email
-                <input id="newUserEmail" type="email" placeholder="user@unitedbuildinggroup.com" />
-              </label>
-
-              <label>
-                Temporary Password
-                <input id="newUserPassword" type="password" placeholder="Minimum 8 characters" />
-              </label>
-
-              <label>
-                Role
-                <select id="newUserRole">
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </label>
-
-              <div>
-                <button class="btn black" onclick="createUser()">Add User</button>
+        <section id="screenBoard" class="screen">
+          <div class="queue-card-grid">
+            <div class="card">
+              <div class="card-body">
+                <div class="eyebrow">Intake Queue</div>
+                <div id="boardOpportunitiesValue" class="value">0</div>
+                <div class="sub">Awaiting accept / decline</div>
               </div>
             </div>
 
-            <div style="height:18px"></div>
+            <div class="card">
+              <div class="card-body">
+                <div class="eyebrow">Bid Queue</div>
+                <div id="boardBiddingValue" class="value">0</div>
+                <div class="sub">Currently being pursued</div>
+              </div>
+            </div>
 
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Active</th>
-                    <th>Created</th>
-                  </tr>
-                </thead>
-                <tbody id="usersTableBody"></tbody>
-              </table>
+            <div class="card">
+              <div class="card-body">
+                <div class="eyebrow">Submitted Queue</div>
+                <div id="boardSubmittedValue" class="value">0</div>
+                <div class="sub">Awaiting award result</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="layout-grid">
+            <aside class="card filters">
+              <div class="card-header">
+                <div>
+                  <h3>Board Controls</h3>
+                  <p>Filter the active board.</p>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="filter-grid">
+                  <label class="filter-label">
+                    Search
+                    <input id="boardSearch" type="text" placeholder="Project, GC, notes..." oninput="renderBoard()" />
+                  </label>
+
+                  <label class="filter-label">
+                    Source
+                    <select id="boardSourceFilter" onchange="renderBoard()">
+                      <option value="All">All Sources</option>
+                      <option value="Manual Entry">Manual Entry</option>
+                      <option value="bids@unitedbuildinggroup.com">bids@unitedbuildinggroup.com</option>
+                      <option value="BuildingConnected">BuildingConnected</option>
+                      <option value="Procore">Procore</option>
+                      <option value="PlanHub">PlanHub</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </label>
+
+                  <div class="filter-actions">
+                    <button class="btn secondary" onclick="clearBoardFilters()">Clear</button>
+                    <button class="btn primary" onclick="openAddBidModal()">Add Bid</button>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h2>Bid Board</h2>
+                  <p>Operational view grouped by UBG workflow stage.</p>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="table-wrap wide-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Stage</th>
+                        <th>Project</th>
+                        <th>Company / GC</th>
+                        <th>Due</th>
+                        <th>Source</th>
+                        <th>Estimator</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="boardTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="screenPipeline" class="screen">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>Proposal Pipeline</h2>
+                <p>Bidding, submitted, won, and lost opportunities.</p>
+              </div>
+              <button class="btn secondary" onclick="loadBids()">Refresh</button>
+            </div>
+
+            <div class="card-body">
+              <div class="table-wrap wide-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Project</th>
+                      <th>Company / GC</th>
+                      <th>Status</th>
+                      <th>Due Date</th>
+                      <th>Estimator</th>
+                      <th>Source</th>
+                      <th>Notes</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pipelineTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="screenAdmin" class="screen">
+          <div class="admin-grid">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h2>User Management</h2>
+                  <p>Add approved users who can access this application.</p>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div id="adminOnlyNotice" class="notice hidden">
+                  Only admin users can create additional users.
+                </div>
+
+                <div id="userCreatePanel" class="form-grid">
+                  <label>
+                    New User Email
+                    <input id="newUserEmail" type="email" placeholder="user@unitedbuildinggroup.com" />
+                  </label>
+
+                  <label>
+                    Temporary Password
+                    <input id="newUserPassword" type="password" placeholder="Minimum 8 characters" />
+                  </label>
+
+                  <label>
+                    Role
+                    <select id="newUserRole">
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </label>
+
+                  <div style="align-self:end;">
+                    <button class="btn black" onclick="createUser()">Add User</button>
+                  </div>
+                </div>
+
+                <div style="height:18px"></div>
+
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Active</th>
+                        <th>Created</th>
+                      </tr>
+                    </thead>
+                    <tbody id="usersTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h2>Integration Roadmap</h2>
+                  <p>Next systems to connect after this dashboard is stable.</p>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="list-editor">
+                  <div class="notice">
+                    <strong>Email Intake</strong><br />
+                    Connect bids@unitedbuildinggroup.com to automatically ingest bid invitations into Opportunities.
+                  </div>
+
+                  <div class="notice">
+                    <strong>Microsoft Login</strong><br />
+                    Upgrade the current app login to Microsoft email authentication for approved UBG users.
+                  </div>
+
+                  <div class="notice">
+                    <strong>OneDrive / SharePoint</strong><br />
+                    Link proposal folders, drawings, specs, addenda, and bid documents to each opportunity.
+                  </div>
+
+                  <div class="notice">
+                    <strong>Bid Platforms</strong><br />
+                    BuildingConnected, Procore, PlanHub, and other platforms can later sync invite intent: ACCEPT / DECLINE.
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -923,11 +1571,101 @@
     </div>
   </div>
 
+  <div id="overlay" class="overlay" onclick="closeAllPanels()"></div>
+
+  <aside id="bidDrawer" class="drawer">
+    <div class="drawer-header">
+      <div>
+        <h2 id="drawerTitle" style="margin:0;">Bid Details</h2>
+        <p id="drawerSubtitle" class="muted" style="margin:5px 0 0;">Opportunity details</p>
+      </div>
+      <button class="btn secondary" onclick="closeAllPanels()">Close</button>
+    </div>
+
+    <div id="drawerBody" class="drawer-body"></div>
+  </aside>
+
+  <div id="bidModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h2 style="margin:0;">Add Bid Opportunity</h2>
+          <p class="muted" style="margin:5px 0 0;">Create a manual opportunity. Email and platform intake will use the same pipeline later.</p>
+        </div>
+        <button class="btn secondary" onclick="closeAllPanels()">Close</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-grid">
+          <label>
+            Project Name
+            <input id="projectName" placeholder="Project name" />
+          </label>
+
+          <label>
+            Company / GC
+            <input id="company" placeholder="Company or GC" />
+          </label>
+
+          <label>
+            Due Date
+            <input id="dueDate" type="date" />
+          </label>
+
+          <label>
+            Source
+            <select id="source">
+              <option value="">Select source</option>
+              <option value="Manual Entry">Manual Entry</option>
+              <option value="bids@unitedbuildinggroup.com">bids@unitedbuildinggroup.com</option>
+              <option value="BuildingConnected">BuildingConnected</option>
+              <option value="Procore">Procore</option>
+              <option value="PlanHub">PlanHub</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <label>
+            Estimator
+            <input id="estimator" placeholder="Estimator" />
+          </label>
+
+          <label>
+            Initial Status
+            <select id="status">
+              <option value="Opportunities">Opportunities</option>
+              <option value="Bidding">Bidding</option>
+              <option value="Submitted">Submitted</option>
+              <option value="Won">Won</option>
+              <option value="Lost">Lost</option>
+            </select>
+          </label>
+
+          <label class="full">
+            Notes
+            <textarea id="notes" placeholder="Scope, location, invite notes, addenda notes, etc."></textarea>
+          </label>
+        </div>
+
+        <div class="row-actions">
+          <button class="btn black" onclick="addBid()">Add Opportunity</button>
+          <button class="btn secondary" onclick="closeAllPanels()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts"></div>
+
   <script>
     const API_BASE_URL = "https://ubg-backend-6h03.onrender.com";
 
+    const STATUSES = ["Opportunities", "Bidding", "Submitted", "Won", "Lost"];
+
     let currentUser = null;
     let bids = [];
+    let currentScreen = "dashboard";
+    let statusFilter = "All";
 
     function getToken() {
       return localStorage.getItem("ubg_token");
@@ -945,11 +1683,7 @@
       const box = document.getElementById("authMessage");
       box.textContent = message || "";
       box.className = "auth-message " + (type || "");
-      if (!message) {
-        box.style.display = "none";
-      } else {
-        box.style.display = "block";
-      }
+      box.style.display = message ? "block" : "none";
     }
 
     function showApp() {
@@ -990,7 +1724,7 @@
         const health = await api("/health", { method: "GET" });
 
         if (!health.login_ready) {
-          document.getElementById("authIntro").textContent = "Create the first administrator login for UBG Bid Platform.";
+          document.getElementById("authIntro").textContent = "Create the first administrator login for UBG Bid and Proposal Management.";
           document.getElementById("setupPanel").classList.remove("hidden");
           document.getElementById("loginPanel").classList.add("hidden");
           showAuth();
@@ -1000,7 +1734,7 @@
         const token = getToken();
 
         if (!token) {
-          document.getElementById("authIntro").textContent = "Login to access UBG Bid Platform.";
+          document.getElementById("authIntro").textContent = "Login to access UBG Bid and Proposal Management.";
           document.getElementById("setupPanel").classList.add("hidden");
           document.getElementById("loginPanel").classList.remove("hidden");
           showAuth();
@@ -1065,12 +1799,14 @@
     }
 
     async function afterLogin() {
-      document.getElementById("currentUser").textContent = currentUser.email + " — " + currentUser.role;
+      document.getElementById("currentUser").textContent = currentUser.email + " | " + currentUser.role;
 
-      if (currentUser.role === "admin") {
-        document.getElementById("tabUsers").classList.remove("hidden");
+      if (currentUser.role !== "admin") {
+        document.getElementById("userCreatePanel").classList.add("hidden");
+        document.getElementById("adminOnlyNotice").classList.remove("hidden");
       } else {
-        document.getElementById("tabUsers").classList.add("hidden");
+        document.getElementById("userCreatePanel").classList.remove("hidden");
+        document.getElementById("adminOnlyNotice").classList.add("hidden");
       }
 
       showApp();
@@ -1081,38 +1817,116 @@
       }
     }
 
-    function showTab(tab) {
-      const tabs = ["board", "list", "add", "users"];
-      tabs.forEach(name => {
-        const tabButton = document.getElementById("tab" + capitalize(name));
-        const view = document.getElementById(name + "View");
-
-        if (tabButton) tabButton.classList.toggle("active", name === tab);
-        if (view) view.classList.toggle("hidden", name !== tab);
-      });
-    }
-
-    function capitalize(value) {
-      return value.charAt(0).toUpperCase() + value.slice(1);
-    }
-
     async function loadBids() {
       try {
         bids = await api("/bids", { method: "GET" });
-        renderBids();
+        populateEstimatorFilter();
+        updateKpis();
+        renderCurrentScreen();
+        toast("Data refreshed.");
       } catch (error) {
         alert(error.message);
       }
     }
 
-    function renderBids() {
-      const statuses = ["Opportunities", "Bidding", "Submitted", "Won", "Lost"];
+    function showScreen(screen) {
+      currentScreen = screen;
 
-      statuses.forEach(status => {
-        const col = document.getElementById("col" + status);
-        if (col) col.innerHTML = "";
+      ["dashboard", "opportunities", "board", "pipeline", "admin"].forEach(name => {
+        const panel = document.getElementById("screen" + capitalize(name));
+        const tab = document.getElementById("screen" + capitalize(name) + "Tab");
+
+        if (panel) panel.classList.toggle("active", name === screen);
+        if (tab) tab.classList.toggle("active", name === screen);
       });
 
+      renderCurrentScreen();
+    }
+
+    function setStatusFilter(status) {
+      statusFilter = status;
+
+      ["All", "Opportunities", "Bidding", "Submitted", "Won", "Lost"].forEach(name => {
+        const tab = document.getElementById("status" + name + "Tab");
+        if (tab) tab.classList.toggle("active", name === status);
+      });
+
+      const quick = document.getElementById("quickStatusFilter");
+      if (quick) quick.value = status;
+
+      renderCurrentScreen();
+    }
+
+    function renderCurrentScreen() {
+      updateKpis();
+
+      if (currentScreen === "dashboard") renderDashboard();
+      if (currentScreen === "opportunities") renderOpportunities();
+      if (currentScreen === "board") renderBoard();
+      if (currentScreen === "pipeline") renderPipeline();
+    }
+
+    function getFilteredBids(extraSearchId) {
+      const globalSearch = getValue("globalSearch").toLowerCase();
+      const extraSearch = extraSearchId ? getValue(extraSearchId).toLowerCase() : "";
+      const sourceFilter = getValue("sourceFilter") || "All";
+      const estimatorFilter = getValue("estimatorFilter") || "All";
+
+      let rows = [...bids];
+
+      if (statusFilter !== "All") {
+        rows = rows.filter(bid => (bid.status || "Opportunities") === statusFilter);
+      }
+
+      if (sourceFilter !== "All" && currentScreen === "opportunities") {
+        rows = rows.filter(bid => (bid.source || "") === sourceFilter);
+      }
+
+      if (estimatorFilter !== "All" && currentScreen === "opportunities") {
+        rows = rows.filter(bid => (bid.estimator || "") === estimatorFilter);
+      }
+
+      if (globalSearch) {
+        rows = rows.filter(bid => rowText(bid).includes(globalSearch));
+      }
+
+      if (extraSearch) {
+        rows = rows.filter(bid => rowText(bid).includes(extraSearch));
+      }
+
+      return rows;
+    }
+
+    function rowText(bid) {
+      return [
+        bid.project_name,
+        bid.company,
+        bid.status,
+        bid.due_date,
+        bid.source,
+        bid.estimator,
+        bid.notes
+      ].join(" ").toLowerCase();
+    }
+
+    function updateKpis() {
+      const counts = countByStatus(bids);
+
+      document.getElementById("kpiOpportunities").textContent = counts.Opportunities;
+      document.getElementById("kpiBidding").textContent = counts.Bidding;
+      document.getElementById("kpiSubmitted").textContent = counts.Submitted;
+      document.getElementById("kpiWon").textContent = counts.Won;
+      document.getElementById("kpiLost").textContent = counts.Lost;
+
+      document.getElementById("activePursuitsValue").textContent = counts.Bidding + counts.Submitted;
+      document.getElementById("totalRecordsValue").textContent = bids.length;
+
+      document.getElementById("boardOpportunitiesValue").textContent = counts.Opportunities;
+      document.getElementById("boardBiddingValue").textContent = counts.Bidding;
+      document.getElementById("boardSubmittedValue").textContent = counts.Submitted;
+    }
+
+    function countByStatus(rows) {
       const counts = {
         Opportunities: 0,
         Bidding: 0,
@@ -1121,126 +1935,229 @@
         Lost: 0
       };
 
-      bids.forEach(bid => {
+      rows.forEach(bid => {
         const status = bid.status || "Opportunities";
         if (counts[status] !== undefined) counts[status] += 1;
-
-        const col = document.getElementById("col" + status);
-        if (col) col.appendChild(createBidCard(bid));
       });
 
-      statuses.forEach(status => {
-        document.getElementById("count" + status).textContent = counts[status];
-        document.getElementById("kpi" + status).textContent = counts[status];
+      return counts;
+    }
 
-        const col = document.getElementById("col" + status);
-        if (col && !col.children.length) {
-          const empty = document.createElement("div");
-          empty.className = "empty-state";
-          empty.textContent = "No bids";
-          col.appendChild(empty);
-        }
+    function renderDashboard() {
+      const recent = [...bids].slice(0, 8);
+      const recentBody = document.getElementById("recentTableBody");
+      recentBody.innerHTML = "";
+
+      if (!recent.length) {
+        recentBody.innerHTML = `<tr><td colspan="5" class="muted">No bid opportunities yet.</td></tr>`;
+      } else {
+        recent.forEach(bid => {
+          const row = document.createElement("tr");
+          row.onclick = () => openBidDrawer(bid.id);
+          row.innerHTML = `
+            <td><strong>${escapeHtml(bid.project_name)}</strong></td>
+            <td>${escapeHtml(bid.company)}</td>
+            <td>${statusBadge(bid.status)}</td>
+            <td>${escapeHtml(formatDate(bid.due_date))}</td>
+            <td>${escapeHtml(bid.source || "")}</td>
+          `;
+          recentBody.appendChild(row);
+        });
+      }
+
+      const summary = document.getElementById("summaryList");
+      const counts = countByStatus(bids);
+      summary.innerHTML = "";
+
+      STATUSES.forEach(status => {
+        const div = document.createElement("div");
+        div.className = "notice";
+        div.innerHTML = `<strong>${status}</strong><br />${counts[status]} record${counts[status] === 1 ? "" : "s"}`;
+        summary.appendChild(div);
       });
-
-      renderBidTable();
     }
 
-    function createBidCard(bid) {
-      const card = document.createElement("div");
-      card.className = "bid-card";
+    function renderOpportunities() {
+      let rows = getFilteredBids("tableSearch");
+      rows = sortRows(rows);
 
-      const due = bid.due_date ? formatDate(bid.due_date) : "No due date";
-      const source = bid.source || "No source";
-      const estimator = bid.estimator || "No estimator";
-
-      card.innerHTML = `
-        <h3>${escapeHtml(bid.project_name)}</h3>
-        <div class="bid-meta">
-          <div><strong>Company:</strong> ${escapeHtml(bid.company)}</div>
-          <div><strong>Due:</strong> ${escapeHtml(due)}</div>
-          <div><strong>Source:</strong> ${escapeHtml(source)}</div>
-          <div><strong>Estimator:</strong> ${escapeHtml(estimator)}</div>
-          ${bid.notes ? `<div><strong>Notes:</strong> ${escapeHtml(bid.notes)}</div>` : ""}
-        </div>
-        <div class="bid-actions">${actionButtons(bid)}</div>
-      `;
-
-      return card;
-    }
-
-    function actionButtons(bid) {
-      const id = bid.id;
-      const status = bid.status || "Opportunities";
-
-      if (status === "Opportunities") {
-        return `
-          <button class="mini-btn accept" onclick="updateStatus(${id}, 'Bidding')">Accept</button>
-          <button class="mini-btn decline" onclick="updateStatus(${id}, 'Lost')">Decline</button>
-          <button class="mini-btn delete" onclick="deleteBid(${id})">Delete</button>
-        `;
-      }
-
-      if (status === "Bidding") {
-        return `
-          <button class="mini-btn submit" onclick="updateStatus(${id}, 'Submitted')">Mark Submitted</button>
-          <button class="mini-btn decline" onclick="updateStatus(${id}, 'Lost')">Mark Lost</button>
-          <button class="mini-btn delete" onclick="deleteBid(${id})">Delete</button>
-        `;
-      }
-
-      if (status === "Submitted") {
-        return `
-          <button class="mini-btn win" onclick="updateStatus(${id}, 'Won')">Mark Won</button>
-          <button class="mini-btn decline" onclick="updateStatus(${id}, 'Lost')">Mark Lost</button>
-          <button class="mini-btn delete" onclick="deleteBid(${id})">Delete</button>
-        `;
-      }
-
-      return `
-        <button class="mini-btn submit" onclick="updateStatus(${id}, 'Opportunities')">Reopen</button>
-        <button class="mini-btn delete" onclick="deleteBid(${id})">Delete</button>
-      `;
-    }
-
-    function renderBidTable() {
-      const body = document.getElementById("bidTableBody");
+      const body = document.getElementById("opportunitiesTableBody");
       body.innerHTML = "";
+      document.getElementById("opportunityCountBadge").textContent = rows.length + " Records";
 
-      if (!bids.length) {
-        body.innerHTML = `
-          <tr>
-            <td colspan="8" class="small-muted">No bid opportunities yet.</td>
-          </tr>
-        `;
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="10" class="empty-state">No matching bid opportunities.</td></tr>`;
         return;
       }
 
-      bids.forEach(bid => {
+      rows.forEach(bid => {
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td><strong>${escapeHtml(bid.project_name)}</strong></td>
+          <td class="wrap"><strong>${escapeHtml(bid.project_name)}</strong></td>
           <td>${escapeHtml(bid.company)}</td>
-          <td><span class="status-pill status-${escapeHtml(bid.status || 'Opportunities')}">${escapeHtml(bid.status || "Opportunities")}</span></td>
-          <td>${escapeHtml(bid.due_date ? formatDate(bid.due_date) : "")}</td>
+          <td>${statusBadge(bid.status)}</td>
+          <td>${escapeHtml(formatDate(bid.due_date))}</td>
           <td>${escapeHtml(bid.source || "")}</td>
           <td>${escapeHtml(bid.estimator || "")}</td>
-          <td>${escapeHtml(bid.notes || "")}</td>
-          <td><div class="bid-actions">${actionButtons(bid)}</div></td>
+          <td class="wrap">${escapeHtml(bid.notes || "")}</td>
+          <td>${escapeHtml(formatDate(bid.created_at))}</td>
+          <td>${escapeHtml(formatDate(bid.updated_at))}</td>
+          <td>${actionButtons(bid)}</td>
         `;
         body.appendChild(row);
       });
     }
 
+    function renderBoard() {
+      let rows = [...bids];
+
+      const search = getValue("boardSearch").toLowerCase();
+      const source = getValue("boardSourceFilter") || "All";
+
+      if (statusFilter !== "All") {
+        rows = rows.filter(bid => (bid.status || "Opportunities") === statusFilter);
+      }
+
+      if (source !== "All") {
+        rows = rows.filter(bid => (bid.source || "") === source);
+      }
+
+      if (search) {
+        rows = rows.filter(bid => rowText(bid).includes(search));
+      }
+
+      rows = rows.sort((a, b) => {
+        const statusOrder = statusRank(a.status) - statusRank(b.status);
+        if (statusOrder !== 0) return statusOrder;
+        return new Date(a.due_date || "2999-12-31") - new Date(b.due_date || "2999-12-31");
+      });
+
+      const body = document.getElementById("boardTableBody");
+      body.innerHTML = "";
+
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="7" class="empty-state">No matching board records.</td></tr>`;
+        return;
+      }
+
+      rows.forEach(bid => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${statusBadge(bid.status)}</td>
+          <td class="wrap"><strong>${escapeHtml(bid.project_name)}</strong></td>
+          <td>${escapeHtml(bid.company)}</td>
+          <td>${escapeHtml(formatDate(bid.due_date))}</td>
+          <td>${escapeHtml(bid.source || "")}</td>
+          <td>${escapeHtml(bid.estimator || "")}</td>
+          <td>${actionButtons(bid)}</td>
+        `;
+        body.appendChild(row);
+      });
+    }
+
+    function renderPipeline() {
+      const rows = getFilteredBids()
+        .filter(bid => ["Bidding", "Submitted", "Won", "Lost"].includes(bid.status || "Opportunities"))
+        .sort((a, b) => statusRank(a.status) - statusRank(b.status));
+
+      const body = document.getElementById("pipelineTableBody");
+      body.innerHTML = "";
+
+      if (!rows.length) {
+        body.innerHTML = `<tr><td colspan="8" class="empty-state">No pipeline records yet.</td></tr>`;
+        return;
+      }
+
+      rows.forEach(bid => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="wrap"><strong>${escapeHtml(bid.project_name)}</strong></td>
+          <td>${escapeHtml(bid.company)}</td>
+          <td>${statusBadge(bid.status)}</td>
+          <td>${escapeHtml(formatDate(bid.due_date))}</td>
+          <td>${escapeHtml(bid.estimator || "")}</td>
+          <td>${escapeHtml(bid.source || "")}</td>
+          <td class="wrap">${escapeHtml(bid.notes || "")}</td>
+          <td>${actionButtons(bid)}</td>
+        `;
+        body.appendChild(row);
+      });
+    }
+
+    function sortRows(rows) {
+      const sort = getValue("sortFilter") || "created_desc";
+
+      return rows.sort((a, b) => {
+        if (sort === "due_asc") {
+          return new Date(a.due_date || "2999-12-31") - new Date(b.due_date || "2999-12-31");
+        }
+
+        if (sort === "due_desc") {
+          return new Date(b.due_date || "1900-01-01") - new Date(a.due_date || "1900-01-01");
+        }
+
+        if (sort === "project_asc") {
+          return String(a.project_name || "").localeCompare(String(b.project_name || ""));
+        }
+
+        if (sort === "company_asc") {
+          return String(a.company || "").localeCompare(String(b.company || ""));
+        }
+
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+      });
+    }
+
+    function statusRank(status) {
+      return {
+        Opportunities: 1,
+        Bidding: 2,
+        Submitted: 3,
+        Won: 4,
+        Lost: 5
+      }[status || "Opportunities"] || 99;
+    }
+
+    function statusBadge(status) {
+      const safeStatus = status || "Opportunities";
+      return `<span class="badge ${escapeHtml(safeStatus)}">${escapeHtml(safeStatus)}</span>`;
+    }
+
+    function actionButtons(bid) {
+      const id = bid.id;
+      const status = bid.status || "Opportunities";
+      const buttons = [];
+
+      buttons.push(`<button class="btn secondary" onclick="openBidDrawer(${id})">View</button>`);
+
+      if (status === "Opportunities") {
+        buttons.push(`<button class="btn" onclick="updateStatus(${id}, 'Bidding')">Accept</button>`);
+        buttons.push(`<button class="btn danger" onclick="updateStatus(${id}, 'Lost')">Decline</button>`);
+      } else if (status === "Bidding") {
+        buttons.push(`<button class="btn" onclick="updateStatus(${id}, 'Submitted')">Submitted</button>`);
+        buttons.push(`<button class="btn danger" onclick="updateStatus(${id}, 'Lost')">Lost</button>`);
+      } else if (status === "Submitted") {
+        buttons.push(`<button class="btn" onclick="updateStatus(${id}, 'Won')">Won</button>`);
+        buttons.push(`<button class="btn danger" onclick="updateStatus(${id}, 'Lost')">Lost</button>`);
+      } else {
+        buttons.push(`<button class="btn secondary" onclick="updateStatus(${id}, 'Opportunities')">Reopen</button>`);
+      }
+
+      buttons.push(`<button class="btn danger" onclick="deleteBid(${id})">Delete</button>`);
+
+      return `<div class="row-actions">${buttons.join("")}</div>`;
+    }
+
     async function addBid() {
       try {
         const payload = {
-          project_name: document.getElementById("projectName").value.trim(),
-          company: document.getElementById("company").value.trim(),
-          due_date: document.getElementById("dueDate").value,
-          source: document.getElementById("source").value,
-          estimator: document.getElementById("estimator").value.trim(),
-          status: document.getElementById("status").value,
-          notes: document.getElementById("notes").value.trim()
+          project_name: getValue("projectName"),
+          company: getValue("company"),
+          due_date: getValue("dueDate"),
+          source: getValue("source"),
+          estimator: getValue("estimator"),
+          status: getValue("status"),
+          notes: getValue("notes")
         };
 
         if (!payload.project_name || !payload.company) {
@@ -1253,16 +2170,11 @@
           body: JSON.stringify(payload)
         });
 
-        document.getElementById("projectName").value = "";
-        document.getElementById("company").value = "";
-        document.getElementById("dueDate").value = "";
-        document.getElementById("source").value = "";
-        document.getElementById("estimator").value = "";
-        document.getElementById("status").value = "Opportunities";
-        document.getElementById("notes").value = "";
-
+        clearBidForm();
+        closeAllPanels();
         await loadBids();
-        showTab("board");
+        showScreen("opportunities");
+        toast("Bid opportunity added.");
       } catch (error) {
         alert(error.message);
       }
@@ -1276,6 +2188,7 @@
         });
 
         await loadBids();
+        toast("Status updated to " + status + ".");
       } catch (error) {
         alert(error.message);
       }
@@ -1289,17 +2202,112 @@
           method: "DELETE"
         });
 
+        closeAllPanels();
         await loadBids();
+        toast("Bid deleted.");
       } catch (error) {
         alert(error.message);
       }
     }
 
+    function openAddBidModal() {
+      document.getElementById("overlay").classList.add("open");
+      document.getElementById("bidModal").classList.add("open");
+    }
+
+    function openBidDrawer(id) {
+      const bid = bids.find(item => Number(item.id) === Number(id));
+      if (!bid) return;
+
+      document.getElementById("drawerTitle").textContent = bid.project_name || "Bid Details";
+      document.getElementById("drawerSubtitle").textContent = bid.company || "";
+
+      document.getElementById("drawerBody").innerHTML = `
+        <div class="drawer-section">
+          <div class="kv"><div class="kv-label">Project</div><div>${escapeHtml(bid.project_name)}</div></div>
+          <div class="kv"><div class="kv-label">Company / GC</div><div>${escapeHtml(bid.company)}</div></div>
+          <div class="kv"><div class="kv-label">Status</div><div>${statusBadge(bid.status)}</div></div>
+          <div class="kv"><div class="kv-label">Due Date</div><div>${escapeHtml(formatDate(bid.due_date))}</div></div>
+          <div class="kv"><div class="kv-label">Source</div><div>${escapeHtml(bid.source || "")}</div></div>
+          <div class="kv"><div class="kv-label">Estimator</div><div>${escapeHtml(bid.estimator || "")}</div></div>
+          <div class="kv"><div class="kv-label">Created</div><div>${escapeHtml(formatDate(bid.created_at))}</div></div>
+          <div class="kv"><div class="kv-label">Updated</div><div>${escapeHtml(formatDate(bid.updated_at))}</div></div>
+        </div>
+
+        <div class="drawer-section">
+          <div class="kv-label">Notes</div>
+          <div class="notice">${escapeHtml(bid.notes || "No notes entered.")}</div>
+        </div>
+
+        <div class="drawer-section">
+          <div class="kv-label">Actions</div>
+          ${actionButtons(bid)}
+        </div>
+      `;
+
+      document.getElementById("overlay").classList.add("open");
+      document.getElementById("bidDrawer").classList.add("open");
+    }
+
+    function closeAllPanels() {
+      document.getElementById("overlay").classList.remove("open");
+      document.getElementById("bidDrawer").classList.remove("open");
+      document.getElementById("bidModal").classList.remove("open");
+    }
+
+    function clearBidForm() {
+      ["projectName", "company", "dueDate", "source", "estimator", "notes"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+      });
+
+      document.getElementById("status").value = "Opportunities";
+    }
+
+    function clearFilters() {
+      document.getElementById("tableSearch").value = "";
+      document.getElementById("sourceFilter").value = "All";
+      document.getElementById("estimatorFilter").value = "All";
+      document.getElementById("sortFilter").value = "created_desc";
+      setStatusFilter("All");
+      renderOpportunities();
+    }
+
+    function clearBoardFilters() {
+      document.getElementById("boardSearch").value = "";
+      document.getElementById("boardSourceFilter").value = "All";
+      renderBoard();
+    }
+
+    function populateEstimatorFilter() {
+      const select = document.getElementById("estimatorFilter");
+      if (!select) return;
+
+      const current = select.value || "All";
+      const estimators = [...new Set(bids.map(bid => bid.estimator).filter(Boolean))].sort();
+
+      select.innerHTML = `<option value="All">All Estimators</option>`;
+
+      estimators.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      });
+
+      select.value = estimators.includes(current) ? current : "All";
+    }
+
     async function createUser() {
       try {
-        const email = document.getElementById("newUserEmail").value.trim();
-        const password = document.getElementById("newUserPassword").value.trim();
-        const role = document.getElementById("newUserRole").value;
+        if (!currentUser || currentUser.role !== "admin") {
+          alert("Admin access required.");
+          return;
+        }
+
+        const email = getValue("newUserEmail");
+        const password = getValue("newUserPassword");
+        const role = getValue("newUserRole") || "user";
 
         await api("/auth/users", {
           method: "POST",
@@ -1311,7 +2319,7 @@
         document.getElementById("newUserRole").value = "user";
 
         await loadUsers();
-        alert("User created.");
+        toast("User created.");
       } catch (error) {
         alert(error.message);
       }
@@ -1325,13 +2333,18 @@
         const body = document.getElementById("usersTableBody");
         body.innerHTML = "";
 
+        if (!users.length) {
+          body.innerHTML = `<tr><td colspan="4" class="muted">No users found.</td></tr>`;
+          return;
+        }
+
         users.forEach(user => {
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${escapeHtml(user.email)}</td>
             <td>${escapeHtml(user.role)}</td>
             <td>${user.is_active ? "Yes" : "No"}</td>
-            <td>${escapeHtml(user.created_at ? formatDate(user.created_at) : "")}</td>
+            <td>${escapeHtml(formatDate(user.created_at))}</td>
           `;
           body.appendChild(row);
         });
@@ -1340,10 +2353,56 @@
       }
     }
 
+    function exportCsv() {
+      const headers = ["Project", "Company", "Status", "Due Date", "Source", "Estimator", "Notes", "Created", "Updated"];
+      const rows = bids.map(bid => [
+        bid.project_name,
+        bid.company,
+        bid.status,
+        bid.due_date,
+        bid.source,
+        bid.estimator,
+        bid.notes,
+        bid.created_at,
+        bid.updated_at
+      ]);
+
+      const csv = [headers, ...rows]
+        .map(row => row.map(value => `"${String(value || "").replaceAll('"', '""')}"`).join(","))
+        .join("\n");
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ubg-bid-opportunities.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function toast(message) {
+      const wrap = document.getElementById("toasts");
+      const div = document.createElement("div");
+      div.className = "toast";
+      div.textContent = message;
+      wrap.appendChild(div);
+      setTimeout(() => div.remove(), 2800);
+    }
+
+    function getValue(id) {
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : "";
+    }
+
     function formatDate(value) {
+      if (!value) return "";
       const date = new Date(value);
       if (Number.isNaN(date.getTime())) return value;
       return date.toLocaleDateString();
+    }
+
+    function capitalize(value) {
+      return value.charAt(0).toUpperCase() + value.slice(1);
     }
 
     function escapeHtml(value) {
