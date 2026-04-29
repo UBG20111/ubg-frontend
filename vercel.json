@@ -1,1 +1,1 @@
-{"version":2,"routes":[{"src":"/(.*)","dest":"/index.html"}]}
+{"version":2,"routes":[{"src":"/(.*)","dest":"/ubg_v11_7_live_index.html"}]}
